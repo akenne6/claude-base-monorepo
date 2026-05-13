@@ -174,9 +174,11 @@ Because `/verify` supports branch mode (clean tree on a feature branch → diffs
 ## One-time setup
 - **GitHub branch protection on `main`** — enforces the no-direct-commits rule at the platform level. In GitHub: **Settings → Branches → Add branch protection rule** for branch name pattern `main`. Recommended settings:
   - Require a pull request before merging (set required approvals to 0 if you're solo, otherwise 1+)
-  - Require status checks to pass before merging — add `PR checks / checks` (from [.github/workflows/pr-checks.yml](.github/workflows/pr-checks.yml)) once it's run at least once. `Integration tests` (from [.github/workflows/integration-tests.yml](.github/workflows/integration-tests.yml)) fires on push to `main`, so it's not a PR gate but is visible per-commit on the main timeline.
+  - Require status checks to pass before merging — add `PR checks / backend` and `PR checks / frontend` (from [.github/workflows/pr-checks.yml](.github/workflows/pr-checks.yml)) once they've run at least once. `Integration tests` (from [.github/workflows/integration-tests.yml](.github/workflows/integration-tests.yml)) fires on push to `main`, so it's not a PR gate but is visible per-commit on the main timeline.
   - Require linear history (forces fast-forward / rebase; prevents merge commits)
   - Do not allow administrators to bypass the above
+
+  After the first PR has triggered the workflow, run [scripts/enable-required-pr-checks.sh](scripts/enable-required-pr-checks.sh) to set the required status checks via the GitHub API (the rest of the protection above can be applied via the UI or matched in the same script body).
 - **`gh` CLI** — install via `brew install gh && gh auth login`. Required for `/promote` and `/address-review`.
 
 ## Automated feedback
